@@ -6,6 +6,7 @@ This repository contains the core recommendation system powering the "For You" f
 
 ## Table of Contents
 
+- [Quick Start: Simulator](#quick-start-simulator)
 - [Overview](#overview)
 - [System Architecture](#system-architecture)
 - [Components](#components)
@@ -22,6 +23,25 @@ This repository contains the core recommendation system powering the "For You" f
 
 ---
 
+## Quick Start: Simulator
+
+Want to see the algorithm in action? Run the Python simulator:
+
+```bash
+python simulator.py
+```
+
+The simulator demonstrates:
+- **Weighted scoring**: How predicted engagement probabilities combine into a final score
+- **Author diversity decay**: How repeated posts from the same author get attenuated
+- **Video bonuses**: How video content within optimal duration ranges gets boosted
+
+No dependencies required - pure Python 3.12+. See the output for a detailed breakdown of how posts are ranked.
+
+> **Note:** The diagrams in this document use Mermaid syntax. They render automatically on GitHub.
+
+---
+
 ## Overview
 
 The For You feed algorithm retrieves, ranks, and filters posts from two sources:
@@ -30,6 +50,15 @@ The For You feed algorithm retrieves, ranks, and filters posts from two sources:
 2. **Out-of-Network (Phoenix Retrieval)**: Posts discovered from a global corpus
 
 Both sources are combined and ranked together using **Phoenix**, a Grok-based transformer model that predicts engagement probabilities for each post. The final score is a weighted combination of these predicted engagements.
+
+```mermaid
+flowchart LR
+    U[User Opens Feed] --> T[Thunder: Following]
+    U --> P[Phoenix: Discovery]
+    T --> M[Merge & Score]
+    P --> M
+    M --> F[For You Feed]
+```
 
 We have eliminated every single hand-engineered feature and most heuristics from the system. The Grok-based transformer does all the heavy lifting by understanding your engagement history (what you liked, replied to, shared, etc.) and using that to determine what content is relevant to you.
 
@@ -205,6 +234,16 @@ The framework runs sources and hydrators in parallel where possible, with config
 ## How It Works
 
 ### Pipeline Stages
+
+```mermaid
+flowchart TD
+    A[Query Hydration] --> B[Candidate Sourcing]
+    B --> C[Filtering]
+    C --> D[ML Scoring]
+    D --> E[Weighted Scoring]
+    E --> F[Author Diversity]
+    F --> G[Top K Selection]
+```
 
 1. **Query Hydration**: Fetch the user's recent engagements history and metadata (eg. following list)
 
