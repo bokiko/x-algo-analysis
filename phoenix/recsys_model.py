@@ -139,7 +139,6 @@ def block_history_reduce(
         history_actions_embeddings: [B, S, D]
         num_item_hashes: number of hash functions for items
         num_author_hashes: number of hash functions for authors
-        emb_size: embedding dimension D
         embed_init_scale: initialization scale
 
     Returns:
@@ -200,7 +199,6 @@ def block_candidate_reduce(
         candidate_product_surface_embeddings: [B, C, D]
         num_item_hashes: number of hash functions for items
         num_author_hashes: number of hash functions for authors
-        emb_size: embedding dimension D
         embed_init_scale: initialization scale
 
     Returns:
