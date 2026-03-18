@@ -700,6 +700,12 @@ class RecsysRetrievalInferenceRunner(BaseInferenceRunner):
         if corpus_embeddings is None:
             corpus_embeddings = self.corpus_embeddings
 
+        if corpus_embeddings is None:
+            raise ValueError(
+                "No corpus embeddings available. Call set_corpus() before retrieve(), "
+                "or pass corpus_embeddings directly."
+            )
+
         return self.retrieve_fn(self.params, batch, recsys_embeddings, corpus_embeddings, top_k)
 
 
